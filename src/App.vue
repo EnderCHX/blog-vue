@@ -1,6 +1,11 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
+import { ref } from 'vue'
 import TopBar from '@/components/TopBar.vue'
+
+const timeStart = Date.parse("2025-01-19 23:54:59.379")
+
+const timeServeRun = ref((Date.now() - timeStart)/1000/60/60/24)
 
 </script>
 
@@ -18,7 +23,7 @@ import TopBar from '@/components/TopBar.vue'
         <el-aside>
           <el-card>
             访问量<br>
-            运行时间
+            运行时间 {{ timeServeRun }} 天
           </el-card>
         </el-aside>
       </div>
