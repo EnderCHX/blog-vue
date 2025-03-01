@@ -2,6 +2,7 @@
 import {marked} from 'marked'
 import { ref, onMounted } from 'vue';
 import global from '@/config/global'
+import axios from 'axios'
 
 const props = defineProps({
     passage_id: {
@@ -13,13 +14,19 @@ const props = defineProps({
 const passageContext = ref('')
 
 const getContent = async () => {
-    const response = await fetch(`${global.blogApiUrl}/post/${props.passage_id}`)
-    const data = await response.json()
-    passageContext.value = marked(data.data.content)
+  console.log('adsa')
+  const response = await axios.get(`${global.blogApiUrl}/post/${props.passage_id}`)
+  console.log(response)
+  if (response.status !== 200) {
+    return
+  }
+
+  passageContext.value = marked(response.data.data.content)
+
 }
 
 onMounted(async () => {
-    await getContent()
+  await getContent()
 })
 </script>
 

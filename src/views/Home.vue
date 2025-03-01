@@ -7,11 +7,12 @@ const passages = ref([])
 const tags = ref([])
 
 const GetPassages = async () => {
-  let url = Global.blogApiUrl + '/posts/'
+  let url = Global.blogApiUrl + '/posts'
   const response = await fetch(url)
   const data = await response.json()
   passages.value = data.data
 }
+
 const GetTags = async () => {
   for (let i = 0; i < passages.value.length; i++) {
     let url = Global.blogApiUrl + "/post/" + passages.value[i].passage_id + '/tags'
@@ -25,6 +26,7 @@ onMounted(async () => {
     await GetPassages()
     await GetTags()
 })
+
 </script>
 
 <template>
