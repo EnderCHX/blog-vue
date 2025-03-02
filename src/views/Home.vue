@@ -30,14 +30,12 @@ onMounted(async () => {
 </script>
 
 <template>
-  <el-scrollbar height="400px">
-    <div v-for="(passage, index) in passages || []" :key="index" class="passage-list">
+    <n-layout-content v-for="(passage, index) in passages || []" :key="index" class="passage-list">
       <RouterLink v-bind:to="`/post/${passage.passage_id}`">
         <PassageCard :author="passage.author_username" :title="passage.title" :tags="tags[index]" :created_at="passage.created_at" :updated_at="passage.updated_at" />
       </RouterLink>  
       <br>
-    </div>
-  </el-scrollbar>
+    </n-layout-content>
 </template>
 
 <style scoped>

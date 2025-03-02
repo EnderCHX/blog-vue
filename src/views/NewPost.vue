@@ -52,21 +52,21 @@ onMounted(() => {
 </script>
 
 <template>
-    <el-input
+    <n-input
         v-model="title"
         placeholder="标题"
         clearable
     />
-    <el-input
+    <n-input
         v-model="content"
         type="textarea"
         placeholder="正文"
         clearable
     />
-    <el-input-tag 
+    <n-input
         v-model="tags"
         clearable
         placeholder="标签"
     />
-    <el-button type="primary" @click="NewPost">发布</el-button>
+    <n-button type="primary" @click="NewPost">发布</n-button>
 </template>

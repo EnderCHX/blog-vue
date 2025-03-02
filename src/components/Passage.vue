@@ -31,5 +31,19 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div v-html="passageContext" class="passage-context"></div>
+  <n-layout-content class="passage-context" v-html="passageContext"></n-layout-content>
 </template>
+
+<style scoped>
+.passage-context {
+  border: solid 1px black;
+}
+
+.passage-context ::v-deep(img) {
+  width: 100%;
+}
+
+.passage-context h1 {
+  color: red;
+}
+</style>

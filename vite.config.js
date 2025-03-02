@@ -8,7 +8,7 @@ import Icons from 'unplugin-icons/vite';
 import IconsResolver from 'unplugin-icons/resolver';
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 
 // https://vite.dev/config/
@@ -17,10 +17,22 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     AutoImport({
-      resolvers: [ElementPlusResolver(), IconsResolver({ prefix: 'i' })],
+      resolvers: [IconsResolver({ prefix: 'i' })],
+      imports: [
+        'vue',
+        {
+          'naive-ui': [
+            'useDialog',
+            'useMessage',
+            'useNotification',
+            'useLoadingBar'
+          ]
+        }
+      ]
     }),
     Components({
-      resolvers: [ElementPlusResolver(),
+      resolvers: [
+        NaiveUiResolver(),
         IconsResolver({
           enabledCollections: ['ep'],
         }),
