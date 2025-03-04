@@ -15,7 +15,7 @@ const passageContext = ref('')
 
 const getContent = async () => {
   console.log('adsa')
-  const response = await axios.get(`${global.blogApiUrl}/post/${props.passage_id}`)
+  const response = await axios.get(`${global.BlogApiUrl}/post/${props.passage_id}`)
   console.log(response)
   if (response.status !== 200) {
     return

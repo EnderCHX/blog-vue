@@ -1,12 +1,9 @@
-import global from "@/config/global.js";
-import {ref} from 'vue'
+import global from "@/config/global.js"
 import sha256 from 'crypto-js/sha256.js'
 
-const passportApiUrl = ref(global.passportApiUrl)
-
-const Login = async (username, password) => {
+export const Login = async (username, password) => {
     password = sha256(password).toString()
-    let url = passportApiUrl.value + "/login"
+    let url = global.PassportApiUrl + "/login"
 
     try {
         let res = await fetch(url, {
@@ -32,15 +29,15 @@ const Login = async (username, password) => {
 
         return false
 
-    } catch {
-        return false
+    } catch (e) {
+        return e
     }
 }
 
-const Register = async (username, password, email, avatar, signature) => {
+export const Register = async (username, password, email, avatar, signature) => {
     password = sha256(password).toString()
 
-    let url = passportApiUrl.value + "/register"
+    let url = global.PassportApiUrl + "/register"
     try {
         let res = await fetch(url, {
             method: 'POST',
@@ -66,14 +63,14 @@ const Register = async (username, password, email, avatar, signature) => {
             return false
         }
 
-    } catch {
-        return false
+    } catch (e) {
+        return e
     }
 }
 
-const GetUserInfo = async () => {
+export const GetUserInfo = async () => {
     let access_token = sessionStorage.getItem('access_token')
-    let url = passportApiUrl.value + "/user/info"
+    let url = global.PassportApiUrl + "/user/info"
     try {
         let res = await fetch(url, {
             method: 'GET',
@@ -85,14 +82,14 @@ const GetUserInfo = async () => {
 
         let data = await res.json()
         return data
-    } catch {
-        return null
+    } catch (e) {
+        return e
     }
 }
 
-const RefreshToken = async () => {
+export const RefreshToken = async () => {
     let refresh_token = localStorage.getItem('refresh_token')
-    let url = passportApiUrl.value + "/refresh"
+    let url = global.PassportApiUrl + "/refresh"
     try {
         let res = await fetch(url, {
             method: 'POST',
@@ -112,12 +109,12 @@ const RefreshToken = async () => {
         } else {
             return false
         }
-    } catch {
-        return false
+    } catch (e) {
+        return e
     }
 }
 
-const TestAccessToken = async () => {
+export const TestAccessToken = async () => {
     let data = await GetUserInfo()
     if (data.code !== "Success") {
         if (localStorage.getItem('refresh_token') === null) {
@@ -127,12 +124,4 @@ const TestAccessToken = async () => {
     }
 
     return true
-}
-
-export default {
-    Login,
-    Register,
-    GetUserInfo,
-    RefreshToken,
-    TestAccessToken
 }

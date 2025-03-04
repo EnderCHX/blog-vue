@@ -1,40 +1,27 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue'
-import global from '@/config/global'
+import {NewPost}  from '@/api/post.js'
+import {useMessage} from 'naive-ui'
 
 const title = ref('')
 const content = ref('')
+const message = useMessage()
 
 const tags = ref([])
 const tagsSet = new Set()
 
-const NewPost = async () => {
-    let url = global.blogApiUrl + '/newpost'
-    let token = sessionStorage.getItem('access_token')
-    let response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-        },
-        body: JSON.stringify({
-            title: title.value,
-            content: content.value,
-            tags: tags.value
-        })
+const newPost = async () => {
+    let res = await NewPost({
+        title: title.value,
+        content: content.value,
+        tags: tags.value,
     })
-    let data = await response.json()
+    let data = await res
     console.log(data)
-    if (response.ok) {
-        ElMessage({
-            message: '发布成功',
-            type: 'success',
-        })
+    if (res.success) {
+      message.success('发布成功')
     } else {
-        ElMessage({
-            message: '发布失败,' + data.message,
-            type: 'error',
-        })
+      message.error('发布失败 '+ data.message)
     }
 }
 
@@ -46,9 +33,6 @@ watch(tags, () => {
     }
 })
 
-onMounted(() => {
-    sessionStorage.setItem('access_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaXNzIjoiY2h4Yy5jYyIsImV4cCI6MTczODEzODYxOSwiaWF0IjoxNzM4MTM1MDE5fQ.dXawAX3AvXO1I6eA9kHgcA8Pm2XjGD70SfZ-ZA7_rUI')
-})
 </script>
 
 <template>
@@ -63,10 +47,6 @@ onMounted(() => {
         placeholder="正文"
         clearable
     />
-    <n-input
-        v-model="tags"
-        clearable
-        placeholder="标签"
-    />
-    <n-button type="primary" @click="NewPost">发布</n-button>
+    <n-dynamic-tags v-model:value="tags" />
+    <n-button type="primary" @click="newPost">发布</n-button>
 </template>

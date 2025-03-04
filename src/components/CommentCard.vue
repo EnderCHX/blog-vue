@@ -16,7 +16,7 @@ const props = defineProps({
 })
 
 const GetComments = async () => {
-  const response = await fetch(`${global.blogApiUrl}/comments/passage/${props.passage_id}`)
+  const response = await fetch(`${global.BlogApiUrl}/comments/passage/${props.passage_id}`)
   const data = await response.json()
   comments.value = data.data
 }
@@ -26,7 +26,7 @@ const SendComment = async () => {
     message.warning('评论不能为空')
     return
   }
-  let url = `${global.blogApiUrl}/newcomment`
+  let url = `${global.BlogApiUrl}/newcomment`
   const response = await fetch(url, {
     method: 'POST',
     headers: {
