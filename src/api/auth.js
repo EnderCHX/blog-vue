@@ -5,7 +5,6 @@ import sha256 from 'crypto-js/sha256.js'
 const passportApiUrl = ref(global.passportApiUrl)
 
 const Login = async (username, password) => {
-    passportApiUrl.value = removeLastXieGang(passportApiUrl.value)
     password = sha256(password).toString()
     let url = passportApiUrl.value + "/login"
 
@@ -22,15 +21,23 @@ const Login = async (username, password) => {
         })
 
         let data = await res.json()
-        return data
+
+        if (data.code === "Success") {
+            sessionStorage.setItem('access_token', data.data.access_token)
+            localStorage.setItem('refresh_token', data.data.refresh_token)
+            return true
+        } else {
+            return false
+        }
+
+        return false
 
     } catch {
-        return null
+        return false
     }
 }
 
-const Register = async (username, password, email) => {
-    passportApiUrl.value = removeLastXieGang(passportApiUrl.value)
+const Register = async (username, password, email, avatar, signature) => {
     password = sha256(password).toString()
 
     let url = passportApiUrl.value + "/register"
@@ -43,8 +50,37 @@ const Register = async (username, password, email) => {
             body: JSON.stringify({
                 username: username,
                 password: password,
-                email: email
+                email: email,
+                avatar: avatar,
+                signature: signature
             })
+        })
+
+        let data = await res.json()
+
+        if (data.code === "Success") {
+            sessionStorage.setItem('access_token', data.data.access_token)
+            localStorage.setItem('refresh_token', data.data.refresh_token)
+            return true
+        } else {
+            return false
+        }
+
+    } catch {
+        return false
+    }
+}
+
+const GetUserInfo = async () => {
+    let access_token = sessionStorage.getItem('access_token')
+    let url = passportApiUrl.value + "/user/info"
+    try {
+        let res = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + access_token
+            }
         })
 
         let data = await res.json()
@@ -54,53 +90,49 @@ const Register = async (username, password, email) => {
     }
 }
 
-const GetUserInfo = async (accecc_token) => {
-    passportApiUrl.value = removeLastXieGang(passportApiUrl.value)
-    let url = passportApiUrl.value + "/user/info"
-    let res = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + accecc_token
-        }
-    })
-    if (res.status === 200) {
+const RefreshToken = async () => {
+    let refresh_token = localStorage.getItem('refresh_token')
+    let url = passportApiUrl.value + "/refresh"
+    try {
+        let res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                refresh_token: refresh_token
+            })
+        })
+
         let data = await res.json()
-        return data
-    } else {
-        return null
+
+        if (data.code === "Success") {
+            sessionStorage.setItem('access_token', data.data.access_token)
+            return true
+        } else {
+            return false
+        }
+    } catch {
+        return false
     }
 }
 
-const RefreshToken = async (refresh_token) => {
-    passportApiUrl.value = removeLastXieGang(passportApiUrl.value)
-    let url = passportApiUrl.value + "/refresh"
-    let res = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            refresh_token: refresh_token
-        })
-    })
-    if (res.status === 200) {
-        let data = await res.json()
-        return data
-    } else {
-        return null
+const TestAccessToken = async () => {
+    let data = await GetUserInfo()
+    if (data.code !== "Success") {
+        if (localStorage.getItem('refresh_token') === null) {
+            return "Unauthorized"
+        }
+        return await RefreshToken()
     }
-}
-const removeLastXieGang = (str) => {
-    while (str[str - 1] === "/") {
-        str = str.toString().substring(0, str.length - 1)
-    }
-    return str
+
+    return true
 }
 
 export default {
     Login,
     Register,
     GetUserInfo,
-    RefreshToken
+    RefreshToken,
+    TestAccessToken
 }
