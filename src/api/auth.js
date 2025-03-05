@@ -24,7 +24,7 @@ export const Login = async (username, password) => {
             localStorage.setItem('refresh_token', data.data.refresh_token)
             return true
         } else {
-            return false
+            return data
         }
 
         return false

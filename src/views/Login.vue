@@ -1,38 +1,37 @@
 <script setup>
 import {ref} from 'vue'
 import {useMessage} from 'naive-ui'
-import auth from '../api/auth'
+import { Login } from '@/api/auth'
+import { useRouter } from 'vue-router'
 
 const username = ref('')
 const password = ref('')
 
 const message = useMessage()
-
+const route = useRouter()
 const login = async () => {
-  let data = await auth.Login(username.value, password.value)
-  console.log(data)
-  if (data.code === "Success") {
-    localStorage.setItem('refresh_token', data.data.refresh_token)
-    sessionStorage.setItem('access_token', data.data.access_token)
+  let status = await Login(username.value, password.value)
+  if (status === true) {
     message.success('登录成功')
   } else {
-    message.error('登录失败 '+ data.message)
+    message.error('登录失败 ', status.msg)
   }
+}
 
+const routeToRegister = () => {
+  route.push('/register')
 }
 
 </script>
 
 <template>
-  <n-dialog-provider>
-    <n-message-provider>
-      <n-layout>
-        <n-input type="text" v-model:value="username"/>
-        <n-input type="password" v-model:value="password"/>
-        <n-button type="primary" @click="login">登录</n-button>
-      </n-layout>
-    </n-message-provider>
-  </n-dialog-provider>
+
+    <n-layout>
+      <n-input type="text" v-model:value="username" placeholder="用户名"/>
+      <n-input type="password" v-model:value="password" placeholder="密码"/>
+      <n-button type="primary" @click="login">登录</n-button>
+      <n-button type="primary" @click="routeToRegister">注册</n-button>
+    </n-layout>
 
 </template>
 
