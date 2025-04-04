@@ -13,6 +13,9 @@ const login = async () => {
   let status = await Login(username.value, password.value)
   if (status === true) {
     message.success('登录成功')
+    route.push('/')
+    sleep(1000)
+    window.location.reload()
   } else {
     message.error('登录失败 ', status.msg)
   }

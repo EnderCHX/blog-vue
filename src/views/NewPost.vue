@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import {NewPost}  from '@/api/post.js'
 import {useMessage} from 'naive-ui'
 

@@ -1,7 +1,7 @@
 import global from "@/config/global.js"
-import TestAccessToken from "@/api/auth.js"
+import {TestAccessToken} from "@/api/auth.js"
 
-export const Comment = async (data) => {
+export const NewComment = async (data) => {
     if (await TestAccessToken() === "Unauthorized") {
         return "Unauthorized"
     }

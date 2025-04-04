@@ -1,8 +1,9 @@
 <script setup>
 import {ref, onMounted, watch  } from 'vue'
-import global from "@/config/global.js";
-import dayjs from "dayjs";
-import { useMessage } from 'naive-ui';
+import global from "@/config/global.js"
+import dayjs from "dayjs"
+import { useMessage } from 'naive-ui'
+import {NewComment} from '@/api/comment'
 
 const textarea = ref('')
 const comments = ref([])
@@ -26,25 +27,17 @@ const SendComment = async () => {
     message.warning('评论不能为空')
     return
   }
-  let url = `${global.BlogApiUrl}/newcomment`
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${sessionStorage.getItem('access_token')}`
-    },
-    body: JSON.stringify({
-      passage_id: props.passage_id,
-      content: textarea.value
-    })
-  })
-  const data = await response.json()
-  if (data.code === 200) {
+  let data = {
+    passage_id: props.passage_id,
+    content: textarea.value
+  }
+  let res = await NewComment(data)
+  if (res.success) {
     message.success('评论成功')
-    textarea.value = ''
     GetComments()
+    textarea.value = ''
   } else {
-    message.error('评论失败')
+    message.error('评论失败 '+ res.msg)
   }
 }
 

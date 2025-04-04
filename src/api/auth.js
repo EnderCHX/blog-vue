@@ -60,7 +60,7 @@ export const Register = async (username, password, email, avatar, signature) => 
             localStorage.setItem('refresh_token', data.data.refresh_token)
             return true
         } else {
-            return false
+            return data
         }
 
     } catch (e) {
