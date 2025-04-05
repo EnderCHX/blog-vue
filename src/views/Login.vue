@@ -14,8 +14,7 @@ const login = async () => {
   if (status === true) {
     message.success('登录成功')
     route.push('/')
-    sleep(1000)
-    window.location.reload()
+    setTimeout(()=>{window.location.reload()}, 1)
   } else {
     message.error('登录失败 ', status.msg)
   }

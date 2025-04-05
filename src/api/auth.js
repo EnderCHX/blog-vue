@@ -115,13 +115,25 @@ export const RefreshToken = async () => {
 }
 
 export const TestAccessToken = async () => {
-    let data = await GetUserInfo()
-    if (data.code !== "Success") {
-        if (localStorage.getItem('refresh_token') === null) {
+    let access_token = sessionStorage.getItem('access_token')
+    let refresh_token = localStorage.getItem('refresh_token')
+    console.log(1)
+    if (access_token === null && refresh_token === null) {
+        console.log(2)
+        return "Unauthorized"
+    } else if (access_token === null && refresh_token !== null) {
+        console.log(await RefreshToken())
+        if (await RefreshToken() !== true) {
             return "Unauthorized"
         }
-        return await RefreshToken()
     }
-
-    return true
+    let userinfo = await GetUserInfo()
+    console.log(userinfo)
+    if (userinfo.code === "InvalidAccessToken") {
+        await RefreshToken()
+    } else if (userinfo.code === "Success") {
+        return true
+    } else {
+        return "Unauthorized"
+    }
 }

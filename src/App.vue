@@ -83,10 +83,8 @@ watch(
 .main {
   border: solid 1px red;
 
-  width: 100vh;
   display: flex;
   flex-direction: column;
-
 
   .top-bar {
     flex-direction: row;

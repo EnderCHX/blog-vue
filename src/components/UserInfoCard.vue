@@ -34,6 +34,7 @@ onMounted(() => {
 
 const logout = () => {
   localStorage.removeItem("refresh_token")
+  sessionStorage.removeItem("access_token")
   window.location.reload()
 }
 
